@@ -1,6 +1,6 @@
 export async function getHackersNew() {
     try {
-        const res = await fetch(`${process.env.REACT_APP_BASE_URI_REST}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URI_REST}/posts`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"
