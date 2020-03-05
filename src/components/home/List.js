@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ListItemSecondaryAction, Tooltip, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography } from '@material-ui/core';
 import { AppContextHome } from '../../context/AppContextHome';
 import Confirm from '../globals/Confirm';
+import { diffDays } from '../../helpers/functions';
 
 const data = [
     {
@@ -933,6 +934,16 @@ const useStyles = makeStyles(theme => ({
 export default function NestedList() {
     const classes = useStyles();
     const { hackersNew, confirm, setConfirm } = useContext(AppContextHome);
+    const [isClickOnDelete, setIsClickOnDelete] = useState(false);
+
+    const handleHoverIconDelete = () => {
+        setIsClickOnDelete(true);
+    }
+
+    const handleOutIconDelete = () => {
+        setIsClickOnDelete(false);
+    }
+
 
     const handleDeleteItem = (e) => event => {
         const onConfirm = () => {
@@ -945,10 +956,12 @@ export default function NestedList() {
             // AQUI SE DEBE HACER EL BORRADO DEL REGISTRO CON ASYNC AWAIT 
 
             setConfirm(undefined);
+            setIsClickOnDelete(false);
         }
 
         const onCancel = () => {
             setConfirm(undefined);
+            setIsClickOnDelete(false);
         };
 
         let confirm = {
@@ -962,9 +975,8 @@ export default function NestedList() {
     }
 
     const handleClickRow = (e) => event => {
-        // console.log(e);
-        // alert(e.story_url ? e.story_url : e.url);
-        window.open(e.story_url ? e.story_url : e.url, "_blank")
+        if(!isClickOnDelete)
+            window.open(e.story_url ? e.story_url : e.url, "_blank")
     }
 
     return (
@@ -988,11 +1000,11 @@ export default function NestedList() {
                             </ListItemAvatar>
                             <ListItemText
                                 style={{ display: 'flex' }} primary={<Typography className={classes.titleTime} style={{ width: '86%' }}>{e.story_title ? e.story_title : e.title}<span className={classes.author}>{`- ${e.author} -`}</span></Typography>}
-                                secondary={<Typography className={classes.titleTime}>{new Date(e.created_at).toISOString().split('T')[0]}</Typography>}
+                    secondary={<Typography className={classes.titleTime}>{diffDays(new Date(), e.created_at)}</Typography>}
                             />
-                            <ListItemSecondaryAction className={classes.listItemSecondaryAction}>
+                            <ListItemSecondaryAction className={classes.listItemSecondaryAction} onClick={handleDeleteItem(e)} onMouseOut={handleOutIconDelete} onMouseOver={handleHoverIconDelete}>
                                 <Tooltip title="Eliminar" aria-label="Eliminar">
-                                    <DeleteIcon style={{ cursor: 'pointer', color: 'red', fontSize: '27px' }} onClick={handleDeleteItem(e)}></DeleteIcon>
+                                    <DeleteIcon style={{ cursor: 'pointer', color: 'red', fontSize: '27px' }}></DeleteIcon>
                                 </Tooltip>
                             </ListItemSecondaryAction>
                         </ListItem>

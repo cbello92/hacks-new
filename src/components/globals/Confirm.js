@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 export default ({title, message, onConfirm, onCancel}) => {
   return (
     <Dialog maxWidth="lg" open={message ? true : false} onClose={onCancel} aria-labelledby="customized-dialog-title">
-      <DialogTitle id="customized-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="customized-dialog-title">{title || ''}</DialogTitle>
       <DialogContent>
         <DialogContentText>{message}</DialogContentText>
       </DialogContent>
